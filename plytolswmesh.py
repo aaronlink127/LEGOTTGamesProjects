@@ -41,12 +41,12 @@ with open(modelname) as modelfile:
     for i in range(0,numberVertex):
         vertex = lines.pop(0).split()
         verts.append([
-            float(vertex[proporder["x"]]),
-            -float(vertex[proporder["y"]]),
+            -float(vertex[proporder["x"]]),
+            float(vertex[proporder["y"]]),
             float(vertex[proporder["z"]])])
         norms.append([
-            int((float(vertex[proporder["nx"]]) + 1) * 127.5),
-            255 - int((float(vertex[proporder["ny"]]) + 1) * 127.5),
+            255 - int((float(vertex[proporder["nx"]]) + 1) * 127.5),
+            int((float(vertex[proporder["ny"]]) + 1) * 127.5),
             int((float(vertex[proporder["nz"]]) + 1) * 127.5)])
         uvs.append([float(vertex[proporder["s"]]),1 - float(vertex[proporder["t"]])])
     for i in range(0,numberFace):
