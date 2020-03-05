@@ -48,7 +48,9 @@ with open(modelname) as modelfile:
             255 - int((float(vertex[proporder["nx"]]) + 1) * 127.5),
             int((float(vertex[proporder["ny"]]) + 1) * 127.5),
             int((float(vertex[proporder["nz"]]) + 1) * 127.5)])
-        uvs.append([float(vertex[proporder["s"]]),1 - float(vertex[proporder["t"]])])
+        if "s" in proporder and "t" in proporder:
+            uvs.append([float(vertex[proporder["s"]]),1 - float(vertex[proporder["t"]])])
+        else: uvs.append([0,0])
     for i in range(0,numberFace):
         face = lines.pop(0).split()
         face.reverse()

@@ -1,25 +1,29 @@
-#Shoddy TCS Converter by aaronlink127
-#Converts LB1/LIJ1 models to TCS format, except badly. Some meshes may not render, or it may be unstable!
+# TCS Converter by aaronlink127
+# Converts LB1/LIJ1 models to TCS format, but may be unstable!
 import tkinter, tkinter.simpledialog, tkinter.filedialog, sys, os, struct, msvcrt
 tkinter.Tk().withdraw()
-openfile = tkinter.filedialog.askopenfilename(title = "Select a model to convert", filetypes = (("GHG Files","*.ghg"), ("GSC Files","*.gsc")))
+openfile = tkinter.filedialog.askopenfilename(title = "Select a model to convert", filetypes = (("TT Games Model Files","*.ghg"), ("TT Games Model Files","*.gsc")))
 if not openfile:
     sys.exit()
+savefile = tkinter.filedialog.asksaveasfilename(title = "Save model as...", filetypes = (("TT Games Model Files","*.ghg"), ("TT Games Model Files","*.gsc")))
+if not savefile:
+    sys.exit()
 def readInt(): return struct.unpack("i", bs.read(4))[0]
-def printPos(identifier): print("%s @ 0x%x" % (identifier,bs.tell()))
-bs = open(openfile, "rb")
+if openfile == savefile:
+    from io import BytesIO
+    with open(openfile,"rb") as modelfile:
+        fileconts = modelfile.read()
+        bs = BytesIO(fileconts)
+else:
+    bs = open(openfile, "rb")
 bs.seek(0x18)
 absOffsetPNTR = bs.tell() + readInt() - 4
 bs.seek(readInt()+0x20) #GSNH
 absOffsetGSNH = bs.tell()
-printPos("GSNH")
 numberImages = readInt()
-print("numberImages %i" % numberImages)
 bs.seek(readInt()-4,1)
-printPos("imageMetas")
 
 imageMetas = []
-numberRealImages = 0
 for i in range(0, numberImages):
     tmp = bs.tell()
     bs.seek(readInt() - 4,1)
@@ -29,25 +33,22 @@ for i in range(0, numberImages):
     bs.seek(0x30,1)
     imageMeta["unknownBytes"] = bs.read(0xC)
     imageMeta["size"] = readInt()
-    if (imageMeta["size"] != 0): numberRealImages += 1
     imageMetas.append(imageMeta)
     bs.seek(tmp+4)
-print("numberRealImages %i" % numberRealImages)
+numberRealImages = len(imageMetas)
 bs.seek(absOffsetPNTR)
-printPos("hi")
 bs.seek(readInt()-4,1)
 DDSOffset = bs.tell()
 
-savefile = tkinter.filedialog.asksaveasfilename(title = "Save model as...", filetypes = (("GHG Files","*.ghg"), ("GSC Files","*.gsc")))
 ws = open(savefile, "wb")
 ws.write(b'....')
 ws.write(struct.pack("h",numberImages))
-for i in range(0, numberRealImages):
-    ws.write(struct.pack("i",imageMetas[i]["width"]))
-    ws.write(struct.pack("i",imageMetas[i]["height"]))
-    ws.write(imageMetas[i]["unknownBytes"])
-    ws.write(struct.pack("i",imageMetas[i]["size"]))
-    ws.write(bs.read(imageMetas[i]["size"]))
+for imageMeta in imageMetas:
+    ws.write(struct.pack("i",imageMeta["width"]))
+    ws.write(struct.pack("i",imageMeta["height"]))
+    ws.write(imageMeta["unknownBytes"])
+    ws.write(struct.pack("i",imageMeta["size"]))
+    ws.write(bs.read(imageMeta["size"]))
 ws.write(bs.read())
 NU20offset = ws.tell() - 4
 ws.seek(0)
