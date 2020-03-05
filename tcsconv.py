@@ -35,7 +35,6 @@ for i in range(0, numberImages):
     imageMeta["size"] = readInt()
     imageMetas.append(imageMeta)
     bs.seek(tmp+4)
-numberRealImages = len(imageMetas)
 bs.seek(absOffsetPNTR)
 bs.seek(readInt()-4,1)
 DDSOffset = bs.tell()
