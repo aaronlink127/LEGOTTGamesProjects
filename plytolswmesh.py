@@ -1,13 +1,22 @@
 # LEGO Star Wars PLY Model Importer by aaronlink127
 # Notes:
-# Python 3.6 recommended, any 3.x version should work however
-# Requires PYFFI, which needs to be installed via PIP
-# Install PIP, then use "python -m pip install pyffi" in command line
+# Python 3.8 recommended, any 3.x version should work however
 # Models are flipped before import, as the game reflips when loading models, so keep this in mind when using other lego game assets
 # Some material editing may be required for this to work, specifically 0x1BB after the beginning of the material should be "02"
 # When exporting from Blender, export as a PLY with "-Z Forward" and "Y Up"
-import struct, sys, pyffi
-from pyffi.utils import tristrip
+import struct, sys
+try:
+    import pyffi
+    from pyffi.utils import tristrip
+except ImportError:
+    import subprocess, tkinter, tkinter.messagebox
+    tkinter.Tk().withdraw()
+    if tkinter.messagebox.askyesno("pyffi not installed","Would you like to install pyffi?"):
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pyffi"])
+    else:
+        sys.exit()
+    import pyffi
+    from pyffi.utils import tristrip
 verts = []
 uvs = []
 norms = []

@@ -24,7 +24,7 @@ bonepairs = group(2,bonelist)
 modifiedicons = {}
 print(imagenames)
 for i in range(0,len(bonepairs)):
-    if (len(imagenames) > 0):
+    if (len(imagenames) > 0 and i not in modifiedicons):
         for j in range(0,len(imagenames)):
             if (bonepairs[i][1].lower() == imagenames[j].lower()): # if the names are equal
                 imagename = imagenames.pop(j)
