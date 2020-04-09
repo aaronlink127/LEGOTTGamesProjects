@@ -4,27 +4,25 @@
 # Models are flipped before import, as the game reflips when loading models, so keep this in mind when using other lego game assets
 # Some material editing may be required for this to work, specifically 0x1BB after the beginning of the material should be "02"
 # When exporting from Blender, export as a PLY with "-Z Forward" and "Y Up"
-import struct, sys
+import struct, sys, tkinter
+tkinter.Tk().withdraw()
 try:
     import pyffi
-    from pyffi.utils import tristrip
 except ImportError:
-    import subprocess, tkinter, tkinter.messagebox
-    tkinter.Tk().withdraw()
+    import subprocess, tkinter.messagebox
     if tkinter.messagebox.askyesno("pyffi not installed","Would you like to install pyffi?"):
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pyffi"])
     else:
         sys.exit()
     import pyffi
-    from pyffi.utils import tristrip
+from pyffi.utils import tristrip
 verts = []
 uvs = []
 norms = []
 faces = []
 vertcolors = []
 if len(sys.argv) < 2: #open file dialog if no file is specified in cmd
-    import tkinter, tkinter.filedialog
-    tkinter.Tk().withdraw()
+    import tkinter.filedialog
     modelname = tkinter.filedialog.askopenfilename(title = "Select a ply file")
     if not modelname:
         sys.exit()
