@@ -10,7 +10,7 @@ try:
     import pyffi
 except ImportError:
     import subprocess, tkinter.messagebox
-    if tkinter.messagebox.askyesno("pyffi not installed","Would you like to install pyffi?"):
+    if tkinter.messagebox.askyesno("pyffi library not installed","The pyffi library is required for this script to function. Would you like to install the pyffi library?"):
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pyffi"])
     else:
         sys.exit()

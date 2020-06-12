@@ -31,7 +31,6 @@ numberImages = struct.unpack("i", bs.read(4))[0]
 print(numberImages)
 bs.seek(struct.unpack("i", bs.read(4))[0]-4,1)
 isLevel = openfile.lower().endswith("gsc")
-isLevel = True
 imageMetas = []
 for i in range(0, numberImages):
     tmp = bs.tell()
